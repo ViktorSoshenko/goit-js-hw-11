@@ -51,11 +51,11 @@ function callSubmit(event) {
   clearAll();
   const form = event.currentTarget;
   inputSerch = form.elements.searchQuery.value.trim();
-
+  console.log(inputSerch);
   fetchImage(inputSerch, page, per_page)
     .then(({ hits, totalHits }) => {
       let division = Math.ceil(totalHits / per_page);
-      if (hits.length === 0) {
+      if (hits.length === 0 || inputSerch === '') {
         Notiflix.Notify.failure(
           `'"Sorry, there are no images matching your search query. Please try again."'`
         );
