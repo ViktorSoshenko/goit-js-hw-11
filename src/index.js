@@ -16,31 +16,30 @@ const loadMoreBt = document.querySelector('.load-more');
 loadMoreBt.classList.add('hidden');
 console.log(loadMoreBt);
 refs.form.addEventListener('submit', callSubmit);
-loadMoreBt.addEventListener('click', name);
+loadMoreBt.addEventListener('click', buttonFunctionClick);
 
 let inputSerch = '';
 const boxImages = document.querySelector('.gallery');
 
 let page;
-let per_page = 50;
-const clickPage = 50;
+let per_page = 40;
 
 // document.documentElement.getBoundingClientRect().top = 0;
 // document.documentElement.getBoundingClientRect().bottom = 1044;
 // window.addEventListener('scroll', populate);
-// function populate() {
+// function populate(event) {
 //   while (true) {
 //     // нижня частина документа
 //     let windowRelativeBottom =
 //       document.documentElement.getBoundingClientRect().bottom;
 
 //     // якщо користувач не прокрутив достатньо далеко (>100px до кінця)
-//     if (windowRelativeBottom > document.documentElement.clientHeight + 100)
+//     if (windowRelativeBottom > document.documentElement.clientHeight + 50)
 //       break;
 
 //     // додамо більше даних
-//     boxImages.insertAdjacentHTML('beforeend', name());
-//     console.log(boxImages);
+
+//     boxImages.insertAdjacentHTML('beforeend', buttonFunctionClick());
 //   }
 // }
 
@@ -55,8 +54,7 @@ function callSubmit(event) {
 
   fetchImage(inputSerch, page, per_page)
     .then(({ hits, totalHits }) => {
-      console.log(`'dogsubmit' ${(hits.length = per_page)}`);
-      console.log(`${totalHits}`);
+      let division = Math.ceil(totalHits / per_page);
       if (hits.length === 0) {
         Notiflix.Notify.failure(
           `'"Sorry, there are no images matching your search query. Please try again."'`
@@ -78,12 +76,15 @@ function callSubmit(event) {
           animationSpeed: 250,
         });
         lightbox.refresh();
+        if (division === page) {
+          Notiflix.Notify.warning(
+            `'We're sorry, but you've reached the end of search results'`
+          );
+          loadMoreBt.classList.add('hidden');
+        }
       }
-
-      // console.log(page);
-      // console.log(per_page);
     })
-    .then(totalHits => console.log(totalHits))
+
     .catch(error => {
       console.log(error);
     })
@@ -111,12 +112,21 @@ function cartImage(hit) {
         `;
 }
 
-function name(e) {
-  console.log(boxImages.children.length + per_page);
+function buttonFunctionClick(e) {
   page += 1;
   fetchImage(inputSerch, page, per_page)
     .then(({ hits, totalHits }) => {
-      if (boxImages.children.length <= totalHits) {
+      console.log(totalHits);
+      console.log(per_page);
+      console.log(page);
+      let division = Math.ceil(totalHits / per_page);
+      console.log(division);
+      if (division === page) {
+        Notiflix.Notify.warning(
+          `'We're sorry, but you've reached the end of search results'`
+        );
+        loadMoreBt.classList.add('hidden');
+      } else {
         const wert = hits.reduce((markup, hit) => markup + cartImage(hit), '');
 
         boxImages.insertAdjacentHTML('beforeend', wert);
@@ -138,11 +148,6 @@ function name(e) {
           animationSlide: true,
           animationSpeed: 250,
         });
-      } else {
-        Notiflix.Notify.warning(
-          `'We're sorry, but you've reached the end of search results'`
-        );
-        loadMoreBt.classList.add('hidden');
       }
     })
     .catch(error => {
