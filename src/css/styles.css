@@ -11,15 +11,19 @@ body {
   color: #212121;
   line-height: 1.5;
   background-color: rgb(66, 3, 37);
+  padding-bottom: 200px;
 }
-img:hover {
-  transform: scale(1.03);
+
+.image {
+  display: block;
+  flex-grow: 1;
+  object-fit: cover;
+  /* width: 469px;*/
+  height: 213px;
+  width: 100%;
 }
-img {
-  height: 427px;
-  width: 640px;
-  /* object-fit: cover; */
-  /* transition: transform var(--animation-duration) var(--timing-function); */
+.image:hover {
+  cursor: zoom-in;
 }
 
 .search-form {
@@ -34,13 +38,25 @@ img {
 }
 
 .photo-card {
-  border: 2px solid rgb(13, 13, 12);
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 4px 4px rgba(0, 0, 0, 0.06),
+    1px 4px 6px rgba(0, 0, 0, 0.16);
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  width: calc((100%) / 5);
 }
+.photo-card:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
 .gallery {
-  margin-top: 50px;
+  margin-top: 75px;
+  margin-bottom: 100px;
+  gap: 20px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .gallery__link {
   display: block;
@@ -64,21 +80,33 @@ img {
 .info {
   background-color: rgb(189, 234, 196);
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
-b {
+.info-item {
   display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: center;
+  line-height: calc(22 / 18);
+  transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .load-more {
   display: flex;
+  justify-content: center;
+  align-items: center;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 40px;
-  width: 150px;
-  height: 40px;
-  background-color: rgb(163, 247, 8);
-  border-radius: 8%;
-  align-items: center;
+
+  width: 200px;
+  height: 50px;
+  background-color: rgb(75, 246, 163);
+  border-radius: 10%;
+}
+.load-more:hover {
+  transform: scale(1.03);
 }
 .load-more.hidden {
   display: none;
@@ -87,10 +115,13 @@ input {
   width: 500px;
   font-size: 30px;
 }
-/* button {
-  background-image: url(/src/img/free-icon-search-4024513.png);
-} */
+
 .search {
   width: 30px;
   height: 30px;
+}
+
+.btn-to-top--visible {
+  opacity: 1;
+  visibility: visible;
 }
