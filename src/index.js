@@ -35,6 +35,7 @@ const options = {
 
 async function callSubmit(event) {
   event.preventDefault();
+  // resetPage();
   loadMoreBt.classList.add('hidden');
   clearAll();
   inputSerch = refs.input.value.trim();
@@ -48,8 +49,10 @@ async function callSubmit(event) {
   } else {
     try {
       resetPage();
+      console.log(`wert${page}`);
       const result = await fetchImages(inputSerch);
-
+      console.log(`trew${page}`);
+      // resetPage();
       if (result.hits.length < 1) {
         refs.form.reset();
         clearAll();
@@ -60,7 +63,7 @@ async function callSubmit(event) {
       } else {
         clearAll();
         refs.form.reset();
-        console.log(page);
+
         boxImages.innerHTML = cartImage(result.hits);
 
         const { height: cardHeight } = document
@@ -99,9 +102,9 @@ async function buttonFunctionClick(e) {
 
     let division = Math.ceil(result.totalHits / perPage);
 
-    let sumImg = page - 1;
+    // let sumImg = page - 1;
 
-    if (sumImg >= division) {
+    if (page > division) {
       const wert = cartImage(result.hits);
       boxImages.insertAdjacentHTML('beforeend', wert);
       Notiflix.Notify.warning(
@@ -132,45 +135,62 @@ function clearAll() {
   boxImages.innerHTML = '';
 }
 
-// document.documentElement.getBoundingClientRect().top = 0;
-// document.documentElement.getBoundingClientRect().bottom = 1044;
-// window.addEventListener('scroll', populate);
+document.documentElement.getBoundingClientRect().top = 0;
+document.documentElement.getBoundingClientRect().bottom = 0;
+window.addEventListener('scroll', populate);
 
-// async function populate() {
-//   while (true) {
-//     // нижня частина документа
-//     let windowRelativeBottom =
-//       document.documentElement.getBoundingClientRect().bottom;
+async function populate() {
+  while (true) {
+    // нижня частина документа
+    let windowRelativeBottom =
+      document.documentElement.getBoundingClientRect().bottom;
 
-//     // якщо користувач не прокрутив достатньо далеко (>100px до кінця)
-//     if (windowRelativeBottom > document.documentElement.clientHeight + 1) break;
+    // якщо користувач не прокрутив достатньо далеко (>100px до кінця)
+    if (windowRelativeBottom > document.documentElement.clientHeight + 1) break;
 
-//     try {
-//       const result = await fetchImages(inputSerch);
-//       let division = Math.ceil(result.totalHits / perPage);
-//       let sumImg = page - 1;
-//       const we = perPage * sumImg;
-//       if (sumImg === division) {
-//         window.removeEventListener('click', populate);
-//         //refs.form.reset();
-//         //const wert = cartImage(result.hits);
-//         //boxImages.insertAdjacentHTML('beforeend', wert);
-//         loadMoreBt.classList.add('hidden');
-//         // console.log(result.totalHits);
-//         // console.log(we);
-//         // alert(`''Oh', 'Images is over', 'Okay''`);
-//         Notiflix.Report.info('Oh', 'Images is over', 'Okay');
-//       } else {
-//         console.log(sumImg);
-//         console.log(division);
-//         // console.log(result.totalHits);
-//         // console.log(we);
-//         const wert = cartImage(result.hits);
-//         boxImages.insertAdjacentHTML('beforeend', wert);
-//       }
-//     } catch (error) {
-//       console.log(error);
-//     }
-//     return;
-//   }
-// }
+    try {
+      console.log(page);
+      const result = await fetchImages(inputSerch);
+      console.log(page);
+
+      let division = Math.ceil(result.totalHits / perPage + 1);
+      // let sumImg = page - 1;
+      const wert = cartImage(result.hits);
+      boxImages.insertAdjacentHTML('beforeend', wert);
+      window.removeEventListener('click', populate);
+
+      // console.log(sumImg);
+      // console.log(division);
+      // const we = perPage * sumImg;
+      if (page === division) {
+        window.removeEventListener('click', populate);
+        //refs.form.reset();
+        //const wert = cartImage(result.hits);
+        //boxImages.insertAdjacentHTML('beforeend', wert);
+        loadMoreBt.classList.add('hidden');
+        // console.log(result.totalHits);
+        // console.log(we);
+        // alert(`''Oh', 'Images is over', 'Okay''`);
+        Notiflix.Report.info('Oh', 'Images is over', 'Okay');
+      } else {
+        const { height: cardHeight } = document
+          .querySelector('.gallery')
+          .firstElementChild.getBoundingClientRect();
+        window.scrollBy({
+          top: cardHeight * 0,
+          behavior: 'smooth',
+        });
+        lightbox = new SimpleLightbox('.gallery a', options).refresh();
+        // console.log(sumImg);
+        // console.log(division);
+        // console.log(result.totalHits);
+        // console.log(we);
+        // const wert = cartImage(result.hits);
+        // boxImages.insertAdjacentHTML('beforeend', wert);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return;
+  }
+}

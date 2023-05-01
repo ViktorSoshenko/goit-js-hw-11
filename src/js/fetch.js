@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export let page;
+export let page = 1;
 
 export const perPage = 40;
 
@@ -17,7 +17,7 @@ export async function fetchImages(inputSerch) {
   const images = await axios
     .get(`https://pixabay.com/api/?${searchParams}`)
     .then((page += 1));
-
+  console.log(images.data);
   return images.data;
 }
 
